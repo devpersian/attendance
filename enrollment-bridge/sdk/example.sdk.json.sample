@@ -1,0 +1,19 @@
+{
+  "id": "example-tosan-fp",
+  "label": "نمونه: کارتخوان اثر انگشت توسان (Tosan TSN reader)",
+  "types": ["fingerprint"],
+  "dlls": ["TsnSDK.dll", "tsnfpcap.dll"],
+  "probe": ["TSN_Init", "TSN_CaptureTemplate", "TSN_Close"],
+  "open": "TSN_Init",
+  "close": "TSN_Close",
+  "capture": {
+    "export": "TSN_CaptureTemplate",
+    "argTypes": ["int", "void*", "void*"],
+    "fixedArgs": [0],
+    "out": { "buf": 1, "len": 2 },
+    "successWhen": "zero"
+  },
+  "algorithm": "tosan-fp-v1",
+  "maxBytes": 16384,
+  "_comment": "Rename to <your-sdk>.sdk.json and drop it next to the vendor DLL (./sdk folder or SDK_DIR). The bridge auto-detects *.sdk.json files on start and on POST /sdk/rescan. argTypes positions listed in out.buf/out.len receive caller-allocated buffers automatically; fixedArgs feeds the remaining scalar args."
+}

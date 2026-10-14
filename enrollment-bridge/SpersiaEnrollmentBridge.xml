@@ -1,0 +1,19 @@
+﻿<service>
+  <id>SpersiaEnrollmentBridge</id>
+  <name>Spersia Enrollment Bridge</name>
+  <description>Local bridge that lets the Spersia web app capture fingerprints/cards via vendor SDKs and USB readers.</description>
+  <executable>D:\Program Files\nodejs\node.exe</executable>
+  <arguments>E:\Projects\NodeJS\attendance\enrollment-bridge\main.js</arguments>
+  <workingdirectory>E:\Projects\NodeJS\attendance\enrollment-bridge</workingdirectory>
+  <env name="BRIDGE_PORT" value="8485"/>
+  <startmode>Automatic</startmode>
+  <onfailure action="restart" delay="10 sec"/>
+  <onfailure action="restart" delay="30 sec"/>
+  <onfailure action="none"/>
+  <resetfailure>1 hour</resetfailure>
+  <logpath>E:\Projects\NodeJS\attendance\enrollment-bridge\logs</logpath>
+  <log mode="roll-by-size">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>5</keepFiles>
+  </log>
+</service>

@@ -1,0 +1,20 @@
+{
+  "id": "zkteco-zkls",
+  "label": "ZKTeco Standalone SDK (ZKAttendance / ZKLS)",
+  "types": ["fingerprint", "face", "card"],
+  "dlls": ["ZKAttendance.dll", "zkls.dll", "zkemnet.dll", "promark.dll"],
+  "probe": ["Connect", "Enroll_Finger", "Disconnect"],
+  "open": "Connect",
+  "close": "Disconnect",
+  "capture": {
+    "export": "Enroll_Finger",
+    "argTypes": ["int", "int", "void*", "void*"],
+    "fixedArgs": [0, 0],
+    "out": { "buf": 2, "len": 3 },
+    "successWhen": "nonzero"
+  },
+  "algorithm": "zk-finger-v10",
+  "maxBytes": 16384,
+  "_comment": "Official ZKTeco PC-side enrollment SDKs require a support login at zkteco.com/en/SDK (no anonymous download). The DLLs ship inside the vendor's SDK package (e.g. ZK Browser / ZKCai installs). Drop the DLL + this manifest into enrollment-bridge\\sdk\\ and hit /sdk/rescan. Adjust export names to the exact SDK revision you received.",
+  "_source": "https://www.zkteco.com/en/SDK"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "spersia-enrollment-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Windows service/agent that lets the Spersia web app drive fingerprint/iris/palm vendor SDKs and USB card readers from the browser.",
+  "main": "main.js",
+  "bin": { "spersia-enrollment-bridge": "main.js" },
+  "scripts": {
+    "start": "node main.js",
+    "dev": "node --watch main.js",
+    "test": "node --test test/*.mjs",
+    "pkg": "pkg -t node20-win-x64 --assets sdk/** package.json main.js -o dist/spersia-enrollment-bridge.exe",
+    "install:service": "node install-service.mjs",
+    "uninstall:service": "node uninstall-service.mjs"
+  },
+  "pkg": {
+    "assets": ["services/**/*"],
+    "targets": ["node20-win-x64"]
+  },
+  "optionalDependencies": {
+    "ffi-napi": "^4.0.3",
+    "koffi": "^2.9.0",
+    "node-hid": "^3.1.0"
+  },
+  "engines": { "node": ">=18" }
+}

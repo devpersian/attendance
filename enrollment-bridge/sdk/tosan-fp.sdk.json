@@ -1,0 +1,20 @@
+{
+  "id": "tosan-tsn",
+  "label": "Tosan TSN Fingerprint Reader (کارتخوان اثر انگشت توسان)",
+  "types": ["fingerprint"],
+  "dlls": ["TsnSDK.dll", "tsnfpcap.dll", "TSNFinger.dll"],
+  "probe": ["TSN_Init", "TSN_CaptureTemplate", "TSN_Close"],
+  "open": "TSN_Init",
+  "close": "TSN_Close",
+  "capture": {
+    "export": "TSN_CaptureTemplate",
+    "argTypes": ["int", "void*", "void*"],
+    "fixedArgs": [0],
+    "out": { "buf": 1, "len": 2 },
+    "successWhen": "zero"
+  },
+  "algorithm": "tosan-fp-v1",
+  "maxBytes": 16384,
+  "_comment": "Tosan (tosan.co.ir) provides the reader SDK/driver package on request through its support desk — no public direct download link exists. Copy TsnSDK.dll + this manifest into enrollment-bridge\\sdk\\ and POST /sdk/rescan.",
+  "_source": "https://www.tosan.com (support request)"
+}

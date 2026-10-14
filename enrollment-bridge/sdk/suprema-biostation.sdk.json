@@ -1,0 +1,20 @@
+{
+  "id": "suprema-biostar",
+  "label": "Suprema BioStation / XPass SDK (SrFace / SrOcs)",
+  "types": ["fingerprint", "face", "irisscan"],
+  "dlls": ["SrSDK.dll", "BioStationAPI.dll", "srface.dll", "SrOcs.dll"],
+  "probe": ["sr_open_all", "sr_enroll_template", "sr_close_all"],
+  "open": "sr_open_all",
+  "close": "sr_close_all",
+  "capture": {
+    "export": "sr_enroll_template",
+    "argTypes": ["int", "int", "void*", "void*"],
+    "fixedArgs": [0, 0],
+    "out": { "buf": 2, "len": 3 },
+    "successWhen": "zero"
+  },
+  "algorithm": "suprema-fp-v3",
+  "maxBytes": 32768,
+  "_comment": "Suprema distributes its device SDKs only through registered partners / the BioStar support portal (login required) — no public direct download. Obtain the SDK from your Suprema reseller, drop the DLL + this manifest into enrollment-bridge\\sdk\\ and POST /sdk/rescan. Export names vary between SrFace vs BioStationAPI generations: edit 'probe'/'capture' to match the header of the package you received.",
+  "_source": "https://www.supremacorp.com/en/product/biostar2 (partner download)"
+}

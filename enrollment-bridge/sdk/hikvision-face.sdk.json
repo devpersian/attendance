@@ -1,0 +1,20 @@
+{
+  "id": "hikvision-hcnetsdk",
+  "label": "Hikvision Face Capture (HCNetSDK)",
+  "types": ["face"],
+  "dlls": ["HCNetSDK.dll", "hcnetsdk.dll", "HCCore.dll"],
+  "probe": ["NET_DVR_Init", "NET_DVR_CaptureJPEGPicture", "NET_DVR_Cleanup"],
+  "open": "NET_DVR_Init",
+  "close": "NET_DVR_Cleanup",
+  "capture": {
+    "export": "NET_DVR_CaptureJPEGPicture",
+    "argTypes": ["int", "int", "void*"],
+    "fixedArgs": [0, 1],
+    "out": { "buf": 2 },
+    "successWhen": "nonzero"
+  },
+  "algorithm": "hikface-v2",
+  "maxBytes": 262144,
+  "_comment": "Hikvision publishes the full HCNetSDK on hikvision.com/en/download under 'Developer / SDK' — it is a large zip gated by an EULA click-through, so it is intentionally NOT vendored into this repo. Install the SDK (or copy its bin folder) to enrollment-bridge\\sdk\\ or set SDK_DIR; sdkManager already searches C:\\Program Files\\Hikvision. This manifest only needs to be enabled if you want face-frame capture through the bridge instead of ISAPI (the server-side 'isapi' driver covers most Hikvision terminals without any DLL).",
+  "_source": "https://www.hikvision.com/en/support/download/sdk/"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "cmitech-iris",
+  "label": "CMITech Iris SDK (EF-45NC / EF-70 / EFM-45/70 / BMT-20 / EMX-30)",
+  "types": ["irisscan"],
+  "dlls": ["IrisTect.dll", "CMISDK.dll", "CmiIrisSDK.dll", "IRISSDK.dll"],
+  "probe": ["Iris_Init", "Iris_CaptureTemplate", "Iris_Close"],
+  "open": "Iris_Init",
+  "close": "Iris_Close",
+  "capture": {
+    "export": "Iris_CaptureTemplate",
+    "argTypes": ["int", "void*", "void*"],
+    "fixedArgs": [0],
+    "out": { "buf": 1, "len": 2 },
+    "successWhen": "zero"
+  },
+  "algorithm": "cmi-iris-v1",
+  "maxBytes": 65536,
+  "_comment": "CMITech (cmi-tech.com) ships its iris enrollment SDK behind the members-only 'Bulletin for F/W' area of their site — there is NO public direct download. Obtain IrisTect.dll (exact vendor file name may differ per SDK version; add all candidates to 'dlls') from sales@cmi-tech.com or your distributor, drop it together with THIS file into enrollment-bridge\\sdk\\ (or SDK_DIR), then POST /sdk/rescan (the web app does this automatically via the 'بازجستجو' button). If the vendor export names differ from the ones probed here, adjust 'probe'/'open'/'close'/'capture' to match the SDK header — the bridge captures any DLL whose exports are described by this declarative manifest, so no code change is needed.",
+  "_source": "https://cmi-tech.com/bulletin-for-sdk-fw/ (login required)"
+}
