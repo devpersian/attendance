@@ -78,7 +78,8 @@ CREATE TABLE [attendance].[Devices] (
     [Port] INT NULL,
     [SerialNumber] NVARCHAR(100) NULL,
     [Protocol] NVARCHAR(50) NOT NULL CHECK ([Protocol] IN ('http', 'http-push', 'tcp', 'mqtt', 'zk', 'isapi', 'dws', 'fpvtech', 'controlianz', 'suprema', 'biostar2', 'sdk600', 'wiegand-gateway', 'realtime', 'smartplus', 'apex', 'crosschex', 'essl-pull', 'pullsdk', 'telnet', 'websockets', 'custom', 'virdi', 'trustone', 'tosan', 'cmitech')),
-    [Status] NVARCHAR(20) NOT NULL CHECK ([Status] IN ('active', 'inactive', 'error', 'maintenance')),
+    -- 'offline' added by migration 017 (Phase 2 offline sweeper); folded in for fresh installs.
+    [Status] NVARCHAR(20) NOT NULL CHECK ([Status] IN ('active', 'inactive', 'error', 'maintenance', 'offline')),
     [Location] NVARCHAR(200) NULL,
     [LastSync] DATETIME NULL,
     [LastSeen] DATETIME NULL,
@@ -87,6 +88,9 @@ CREATE TABLE [attendance].[Devices] (
     [ConsecutiveFailures] INT NOT NULL DEFAULT 0,
     [TotalRecordsReceived] INT NOT NULL DEFAULT 0,
     [PollingInterval] INT DEFAULT 60,
+    -- Last-pull bookkeeping + offline-alert dedupe flag (migrations 016); folded in here.
+    [LastPulledAt] DATETIME NULL,
+    [OfflineAlerted] BIT NOT NULL DEFAULT 0,
     [WebhookEnabled] BIT DEFAULT 0,
     [WebhookURL] NVARCHAR(500) NULL,
     [Config] NVARCHAR(MAX) NULL,
@@ -1247,6 +1251,22 @@ UPDATE [attendance].[Devices] SET [Status] = 'active' WHERE [Status] NOT IN ('ac
 GO
 ALTER TABLE [attendance].[Devices] ADD CONSTRAINT [CK_Attendance_Devices_Status]
     CHECK ([Status] IN ('active', 'inactive', 'error', 'maintenance', 'offline'));
+GO
+
+-- ---------- _migrations (migration runner bookkeeping — Phase 3 / P3.1) ----------
+-- The boot-time runner (server/services/migrate.mjs) creates this table itself;
+-- it is included in schema.sql so a fresh install's accounting starts clean and
+-- the folded-in migrations above can be baselined with:
+--   node server/migrate-cli.mjs --baseline
+IF NOT EXISTS (SELECT 1 FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id
+               WHERE s.name = 'attendance' AND t.name = '_migrations')
+BEGIN
+    CREATE TABLE [attendance].[_migrations] (
+        [Id]        INT IDENTITY(1,1) PRIMARY KEY,
+        [Name]      NVARCHAR(255) NOT NULL UNIQUE,
+        [AppliedAt] DATETIME NOT NULL DEFAULT GETDATE()
+    );
+END
 GO
 
 -- ============================================

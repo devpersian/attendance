@@ -14,11 +14,15 @@
 // with an inert stub so importing the routers never opens a connection.
 // Run directly:  node tests/routeAuth.test.mjs   (exits non-zero on failure)
 
-import { createRequire } from 'node:module';
+import { createRequire, register } from 'node:module';
 import http from 'node:http';
 import { pathToFileURL } from 'node:url';
 
 process.env.JWT_SECRET ||= 'route-auth-test-secret'; // deterministic; no ensureJwtSecret needed
+process.env.NODE_ENV = 'test'; // keeps boot-time side effects (migrations) off
+
+// Install the db.mjs stub BEFORE any ../server/ module is imported below.
+register('./mockDb.mjs', import.meta.url);
 
 const require = createRequire(import.meta.url);
 const express = require('express');
